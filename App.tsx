@@ -101,6 +101,10 @@ function App() {
     }
   };
 
+  const updatePrize = (updatedPrize: Prize) => {
+    setPrizes(prev => prev.map(p => p.id === updatedPrize.id ? updatedPrize : p));
+  };
+
   const triggerConfetti = () => {
     const duration = 3000;
     const end = Date.now() + duration;
@@ -306,6 +310,8 @@ function App() {
             onImportPrizes={setPrizes}
             participantCount={participants.length}
             prizeCount={prizes.length}
+            prizes={prizes}
+            onUpdatePrize={updatePrize}
         />
       </div>
     </div>

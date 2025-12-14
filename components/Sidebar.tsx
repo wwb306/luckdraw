@@ -21,9 +21,9 @@ const Sidebar: React.FC<SidebarProps> = ({ prizes, currentPrizeId, onSelectPrize
         </h2>
       </div>
       
-      <div className="flex-1 p-8 flex flex-col gap-10">
+      <div className="flex-1 p-8 flex flex-col gap-10 overflow-y-auto custom-scrollbar">
         {/* Dropdown Selection */}
-        <div className="relative z-20">
+        <div className="relative z-20 shrink-0">
             <label className="block text-base text-slate-400 mb-3 font-medium">当前抽取奖项</label>
             <div className="relative group">
                 <select 
@@ -48,33 +48,35 @@ const Sidebar: React.FC<SidebarProps> = ({ prizes, currentPrizeId, onSelectPrize
         </div>
 
         {/* Prize Image Display */}
-        <div className="flex-1 flex flex-col items-center">
+        <div className="flex-1 flex flex-col items-center min-h-0">
              {currentPrize ? (
                  <div className="w-full flex flex-col items-center animate-in fade-in zoom-in duration-500">
-                    <div className="relative w-full aspect-square mb-8 rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-700 bg-slate-900 group">
+                    
+                    {/* Image Container - Fixed Height Forced */}
+                    <div className="relative w-full h-[340px] bg-slate-900 rounded-2xl overflow-hidden border-4 border-slate-700 shadow-2xl mb-8 group shrink-0">
                         {currentPrize.image ? (
                             <img 
                                 src={currentPrize.image} 
                                 alt="prize" 
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                className="w-full h-full object-contain bg-slate-900" 
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                                <Gift className="w-40 h-40 text-slate-600 drop-shadow-lg" />
+                                <Gift className="w-32 h-32 text-slate-700 drop-shadow-lg" />
                             </div>
                         )}
                         {/* Overlay Badge */}
-                        <div className="absolute top-0 left-0 bg-purple-600 text-white text-base font-bold px-4 py-2 rounded-br-xl shadow-lg">
+                        <div className="absolute top-0 left-0 bg-purple-600 text-white text-base font-bold px-4 py-2 rounded-br-xl shadow-lg z-10">
                             {currentPrize.tier}
                         </div>
                     </div>
 
-                    <h3 className="text-3xl font-bold text-white text-center mb-4 drop-shadow-md">
+                    <h3 className="text-3xl font-bold text-white text-center mb-4 drop-shadow-md shrink-0">
                         {currentPrize.name}
                     </h3>
                     
                     {/* Stats Card */}
-                    <div className="w-full bg-slate-700/50 rounded-xl p-5 border border-slate-600 mt-2">
+                    <div className="w-full bg-slate-700/50 rounded-xl p-5 border border-slate-600 mt-2 shrink-0">
                         <div className="flex justify-between items-center text-base mb-3">
                             <span className="text-slate-300">中奖进度</span>
                             <span className="text-white font-mono font-bold text-lg">
