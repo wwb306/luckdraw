@@ -30,8 +30,9 @@ export interface User {
 
 export interface Project {
   id: string;
-  ownerId: string;
+  ownerId?: string;
   name: string;
+  password?: string;
   description?: string;
   createdAt: number;
   updatedAt: number;
