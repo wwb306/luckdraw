@@ -21,3 +21,22 @@ export interface AppState {
   isRolling: boolean;
   displayParticipants: Participant[];
 }
+
+export interface User {
+  id: string;
+  name: string;
+  createdAt: number;
+}
+
+export interface Project {
+  id: string;
+  ownerId: string;
+  name: string;
+  description?: string;
+  createdAt: number;
+  updatedAt: number;
+  data: {
+    participants: Participant[];
+    prizes: Prize[];
+  };
+}

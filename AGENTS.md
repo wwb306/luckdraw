@@ -1,6 +1,8 @@
 <!-- OPENSPEC:START -->
 # OpenSpec Instructions
 
+IMPORTANT: All output, proposals, tasks, and specifications must be written in Simplified Chinese.
+
 These instructions are for AI assistants working in this project.
 
 Always open `@/openspec/AGENTS.md` when the request:
