@@ -1,0 +1,1 @@
+{"mcpServers":{"drawio":{"command":"npx","args":["@next-ai-drawio/mcp-server@latest"],"alwaysAllow":["export_diagram","display_diagram","start_session"]}}}
