@@ -8,7 +8,7 @@
             <Package class="w-6 h-6" />
           </div>
           <div>
-            <h1 class="text-xl font-bold">抽奖专业版</h1>
+            <h1 class="text-xl font-bold">年会抽奖工具</h1>
             <p class="text-xs text-slate-400">后台管理</p>
           </div>
         </div>
@@ -18,7 +18,7 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto p-6">
       <div class="flex justify-between items-center mb-8">
-        <h2 class="text-2xl font-bold">我的项目</h2>
+        <h2 class="text-2xl font-bold">抽奖项目</h2>
         <button
           @click="isModalOpen = true"
           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"

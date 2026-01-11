@@ -92,7 +92,7 @@ const searchQuery = ref('')
 const tools = ref<Tool[]>([
   {
     id: 'lucky-draw',
-    name: '抽奖专业版',
+    name: '年会抽奖工具',
     description: '功能强大的年会或活动抽奖系统。管理参与者、奖品并导出结果。',
     icon: Package,
     route: '/lucky-draw',
