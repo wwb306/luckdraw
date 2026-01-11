@@ -31,3 +31,9 @@ if os.path.exists("./frontend/dist"):
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Lucky Draw Pro API"}
+
+# --- 添加这一段 ---
+if __name__ == "__main__":
+    import uvicorn
+    # 注意：在调试模式下，建议把 reload 设为 False，避免调试器不稳定
+    uvicorn.run(app, host="127.0.0.1", port=8001)
