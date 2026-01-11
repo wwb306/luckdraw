@@ -36,4 +36,4 @@ def read_root():
 if __name__ == "__main__":
     import uvicorn
     # 注意：在调试模式下，建议把 reload 设为 False，避免调试器不稳定
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
