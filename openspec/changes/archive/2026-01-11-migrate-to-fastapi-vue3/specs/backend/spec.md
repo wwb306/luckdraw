@@ -1,6 +1,6 @@
 # Spec Delta: Backend Storage and API
 
-## MODIFIED Requirements
+## ADDED Requirements
 ### Requirement: Project CRUD
 The system SHALL allow users to create, read, update, and delete lottery projects. Data MUST be persisted in a server-side SQLite database.
 

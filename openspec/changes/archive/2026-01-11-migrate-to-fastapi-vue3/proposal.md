@@ -1,9 +1,9 @@
-# Proposal: Migrate to FastAPI + Vue3
+# OpenSpec Proposal: Migrate to FastAPI + Vue3
 
-## Problem
+## Why
 当前项目是一个纯前端的 React 应用，使用 `localStorage` 进行数据持久化。这在多设备访问、数据安全性以及后续功能扩展（如多人协作、大规模数据处理）方面存在局限。
 
-## Proposed Changes
+## What Changes
 将项目的架构从纯前端 SPA 迁移到前后端分离的架构：
 - **后端**: 使用 Python 的 FastAPI 框架提供 RESTful API，数据存储使用 SQLite + SQLAlchemy。
 - **前端**: 使用 Vue 3 (Composition API) + Vite + Tailwind CSS 重新实现现有界面和逻辑。

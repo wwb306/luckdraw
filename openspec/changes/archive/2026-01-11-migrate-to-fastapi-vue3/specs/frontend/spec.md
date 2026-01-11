@@ -1,6 +1,6 @@
 # Spec Delta: Vue 3 Frontend Implementation
 
-## MODIFIED Requirements
+## ADDED Requirements
 ### Requirement: UI Framework
 The frontend SHALL be implemented using Vue 3 and the Composition API.
 

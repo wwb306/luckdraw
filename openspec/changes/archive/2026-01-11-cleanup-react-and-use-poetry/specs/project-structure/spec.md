@@ -18,7 +18,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: 明确前后端分离目录结构
-项目必须采用清晰的前后端分离结构，根目录仅保留全局配置和 OpenSpec 文档。
+项目 MUST 采用清晰的前后端分离结构，根目录仅保留全局配置和 OpenSpec 文档。
 
 #### Scenario: 验证目录布局
 - **Given** 项目初始化完成

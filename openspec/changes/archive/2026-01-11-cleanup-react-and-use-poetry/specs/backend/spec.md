@@ -3,7 +3,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: 使用 Poetry 管理 Python 依赖
-后端必须使用 Poetry 作为主要的包管理工具，以确保依赖的确定性和环境的可复现性。
+后端 MUST 使用 Poetry 作为主要的包管理工具，以确保依赖的确定性和环境的可复现性。
 
 #### Scenario: 初始化 Poetry 环境
 - **Given** 后端代码位于 `backend/` 目录
