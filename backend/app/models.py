@@ -19,6 +19,7 @@ class Project(Base):
 
     participants = relationship("Participant", back_populates="project", cascade="all, delete-orphan")
     prizes = relationship("Prize", back_populates="project", cascade="all, delete-orphan")
+    winners = relationship("Winner", back_populates="project", cascade="all, delete-orphan")
 
 class Participant(Base):
     __tablename__ = "participants"
@@ -57,3 +58,4 @@ class Winner(Base):
 
     participant = relationship("Participant", back_populates="winners")
     prize = relationship("Prize", back_populates="winners")
+    project = relationship("Project", back_populates="winners")

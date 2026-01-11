@@ -11,19 +11,19 @@
     <div class="flex-1 flex flex-col relative min-w-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-950">
       
       <!-- Top Bar -->
-      <header class="h-20 border-b border-slate-700 bg-slate-900/80 backdrop-blur-md flex justify-between items-center px-8 shrink-0 z-10">
+      <header class="h-16 border-b border-slate-700 bg-slate-900/80 backdrop-blur-md flex justify-between items-center px-8 shrink-0 z-10">
         <div class="flex items-center gap-3">
            <button
               @click="onExit"
               class="p-2 -ml-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"
-              title="Back to Dashboard"
+              title="返回仪表盘"
            >
               <ArrowLeft class="w-5 h-5" />
            </button>
            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded-lg shadow-lg shadow-purple-900/50">
               <Gift class="w-6 h-6 text-white" />
            </div>
-           <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
+           <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
               {{ project.name }}
            </h1>
         </div>
@@ -51,107 +51,125 @@
       </header>
 
       <!-- Main Body -->
-      <main class="flex-1 overflow-y-auto p-8 flex flex-col items-center">
+      <main class="flex-1 overflow-hidden p-6 flex flex-col items-center">
         
-        <div v-if="currentPrize" class="w-full max-w-[1600px] flex flex-col items-center gap-10">
+        <div v-if="currentPrize"
+            :class="[
+                'w-full h-full max-w-[1600px] flex flex-col items-center overflow-hidden'
+            ]"
+        >
             
             <!-- 1. Rolling Area / Stage -->
-            <div class="w-full min-h-[300px] flex flex-col items-center justify-center p-8 rounded-3xl bg-slate-800/30 border border-slate-700/50 relative overflow-hidden">
+            <div
+                :class="[
+                    'w-full rounded-3xl bg-slate-800/30 border border-slate-700/50 relative overflow-hidden transition-all duration-500',
+                    isRolling || displayParticipants.length > 0 ? 'h-[45vh] mb-6' : 'h-[35vh] mb-8'
+                ]"
+            >
                 <!-- Background decoration -->
                 <div class="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
 
-                <div v-if="displayParticipants.length > 0" 
-                    :class="[
-                        'grid gap-8 w-full transition-all duration-300 z-10',
-                        displayParticipants.length === 1 ? 'grid-cols-1 max-w-lg' : '',
-                        displayParticipants.length > 1 && displayParticipants.length <= 4 ? 'grid-cols-2 max-w-4xl' : '',
-                        displayParticipants.length > 4 && displayParticipants.length <= 8 ? 'grid-cols-3 md:grid-cols-4' : '',
-                        displayParticipants.length > 8 ? 'grid-cols-4 md:grid-cols-5' : ''
-                    ]"
-                >
-                    <div 
+                <div v-if="displayParticipants.length > 0"
+    :class="[
+        // 核心修改：
+        // 1. 保留 content-center (确保整体垂直居中)
+        // 2. 将 gap-y-2 改为 gap-y-6 (让上下间距变大，不再拥挤)
+        'grid gap-x-8 gap-y-6 w-full h-full content-center justify-center p-4 transition-all duration-300 z-10',
+        displayParticipants.length === 1 ? 'grid-cols-1 max-w-md mx-auto' : '',
+        displayParticipants.length > 1 && displayParticipants.length <= 4 ? 'grid-cols-2 max-w-2xl mx-auto' : '',
+        displayParticipants.length > 4 && displayParticipants.length <= 8 ? 'grid-cols-3 md:grid-cols-4' : '',
+        displayParticipants.length > 8 ? 'grid-cols-4 md:grid-cols-5 xl:grid-cols-6' : ''
+    ]"
+>
+                    <div
                         v-for="(p, idx) in displayParticipants"
                         :key="idx"
                         :class="[
-                            'relative flex flex-col items-center justify-center bg-slate-800 border-2 rounded-2xl shadow-2xl overflow-hidden p-6 group',
-                            displayParticipants.length === 1 ? 'h-64' : 'h-48',
+                            'relative flex flex-col items-center justify-center bg-slate-800 border-2 rounded-2xl shadow-2xl overflow-hidden group transition-all',
+                            displayParticipants.length === 1 ? 'h-48 w-full p-6' :
+                            displayParticipants.length <= 4 ? 'h-36 p-4' : 'h-28 p-3',
                             isRolling ? 'border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.3)] scale-105' : 'border-yellow-500/50 shadow-yellow-500/10'
                         ]"
                     >
-                        <div class="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40">
-                            <Gift class="w-8 h-8" />
+                        <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20">
+                            <Gift class="w-6 h-6" />
                         </div>
                         
                         <span :class="[
-                            'font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-200 text-center',
-                            displayParticipants.length === 1 ? 'text-6xl mb-4' : 'text-3xl mb-2'
+                            'font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-200 text-center truncate w-full',
+                            displayParticipants.length === 1 ? 'text-5xl mb-3' :
+                            displayParticipants.length <= 4 ? 'text-2xl mb-2' : 'text-lg mb-1'
                         ]">
                             {{ p.name }}
                         </span>
                         <span :class="[
-                            'font-mono text-slate-400 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-700',
-                            displayParticipants.length === 1 ? 'text-2xl' : 'text-sm'
+                            'font-mono text-slate-400 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700',
+                            displayParticipants.length === 1 ? 'text-xl' :
+                            displayParticipants.length <= 4 ? 'text-xs' : 'text-[10px]'
                         ]">
                             {{ p.um }}
                         </span>
                     </div>
                 </div>
-                <div v-else class="text-center space-y-6 py-12 z-10">
-                    <div class="inline-flex p-6 rounded-full bg-slate-800 border border-slate-700 text-slate-500">
-                        <Users class="w-10 h-10" />
+                <div v-else class="h-full flex flex-col items-center justify-center text-center space-y-4 p-6 z-10">
+                    <div class="inline-flex p-4 rounded-full bg-slate-800 border border-slate-700 text-slate-500">
+                        <Users class="w-8 h-8" />
                     </div>
-                    <h3 class="text-2xl text-slate-400 font-medium">准备好开始了吗？</h3>
-                    <p class="text-slate-500 text-lg">
-                        本轮将抽取 <span class="text-purple-400 font-bold text-xl mx-1">{{ batchSize }}</span> 位幸运儿
-                    </p>
+                    <div>
+                        <h3 class="text-xl text-slate-400 font-medium">准备好开始了吗？</h3>
+                        <p class="text-slate-500 text-base">
+                            本轮将抽取 <span class="text-purple-400 font-bold text-lg mx-1">{{ batchSize }}</span> 位幸运儿
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <!-- 2. Controls -->
-            <div class="z-10">
+            <div class="shrink-0 z-20">
                 <button v-if="!isRolling"
                     @click="handleStart"
                     :disabled="isFinished"
-                    class="group relative px-14 py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-bold text-2xl text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-4"
+                    class="group relative px-10 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-bold text-lg text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-3"
                 >
-                    <Play class="w-8 h-8 fill-current" />
+                    <Play class="w-6 h-6 fill-current" />
                     {{ isFinished ? '该奖项已结束' : '开始抽奖' }}
                 </button>
                 <button v-else
                     @click="handleStop"
-                    class="group px-14 py-5 bg-red-600 hover:bg-red-500 rounded-full font-bold text-2xl text-white shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-4"
+                    class="group px-12 py-4 bg-red-600 hover:bg-red-500 rounded-full font-bold text-xl text-white shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-4"
                 >
-                    <Square class="w-8 h-8 fill-current" />
+                    <Square class="w-6 h-6 fill-current" />
                     停止滚动
                 </button>
             </div>
 
             <!-- 3. Winners List (History for current prize) -->
-            <div v-if="currentPrizeWinners.length > 0" class="w-full bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden mt-2 shadow-xl">
-                <div class="p-6 bg-slate-800 border-b border-slate-700 flex justify-between items-center text-white">
-                    <h3 class="text-xl font-bold text-white flex items-center gap-3">
-                        <Gift class="w-6 h-6 text-yellow-500" />
+            <div v-if="currentPrizeWinners.length > 0" class="w-full bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden shadow-xl shrink-0 max-h-[30%] flex flex-col mt-6">
+                <div class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center text-white shrink-0">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-3">
+                        <Gift class="w-5 h-5 text-yellow-500" />
                         获奖名单 ({{ currentPrizeWinners.length }})
                     </h3>
-                    <span class="text-sm text-slate-300 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <span class="text-xs text-slate-300 bg-slate-900 px-3 py-1 rounded-lg border border-slate-700">
                         {{ currentPrize.name }}
                     </span>
                 </div>
-                <div class="p-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <div v-for="winner in currentPrizeWinners" :key="winner.id" class="bg-slate-700/60 p-5 rounded-xl border border-slate-600 flex flex-col items-center gap-2 hover:bg-slate-700 hover:border-slate-500 transition-all hover:scale-105 shadow-sm">
-                        <span class="text-white font-bold text-xl md:text-2xl truncate w-full text-center">{{ getParticipantName(winner.participant_id) }}</span>
-                        <span class="text-sm md:text-base text-slate-400 font-mono bg-slate-800/50 px-2 py-0.5 rounded">{{ getParticipantUM(winner.participant_id) }}</span>
+                <div class="p-4 overflow-y-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                    <div v-for="winner in currentPrizeWinners" :key="winner.id" class="bg-slate-700/60 p-3 rounded-xl border border-slate-600 flex flex-col items-center gap-1 hover:bg-slate-700 hover:border-slate-500 transition-all shadow-sm">
+                        <span class="text-white font-bold text-base truncate w-full text-center">{{ getParticipantName(winner.participant_id) }}</span>
+                        <span class="text-[10px] text-slate-400 font-mono bg-slate-800/50 px-2 py-0.5 rounded">{{ getParticipantUM(winner.participant_id) }}</span>
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <div v-else class="flex flex-col items-center justify-center h-full text-slate-500 mt-20">
+        <div v-else class="flex flex-col items-center justify-center h-full text-slate-500">
             <div class="p-8 bg-slate-800 rounded-full mb-8">
                <Gift class="w-20 h-20 text-slate-600" />
             </div>
             <p class="text-2xl font-medium">请在左侧选择一个奖项开始抽奖</p>
-            <p class="text-lg mt-3 text-slate-600">选择后将展示对应的奖品图和剩余名额</p>
+            <p class="text-lg mt-3 text-slate-600">选择后将展示对应的奖项配置和剩余名额</p>
         </div>
       </main>
 
@@ -280,11 +298,14 @@ const handleStop = async () => {
     triggerConfetti()
 }
 
-const handleReset = () => {
+const handleReset = async () => {
     if (confirm("确定要重置所有抽奖数据吗？这将清空所有中奖记录。")) {
-        // Server-side reset logic would be needed here
-        // For now, we can just alert that it's not implemented yet or implement a reset API
-        alert("重置功能需后端支持。")
+        try {
+            await projectStore.resetProjectWinners(props.id)
+            displayParticipants.value = []
+        } catch (err) {
+            alert("重置失败")
+        }
     }
 }
 
@@ -316,8 +337,8 @@ const onExit = () => {
   router.push('/')
 }
 
-const getParticipantName = (id: string) => project.value?.participants.find(p => p.id === id)?.name || 'Unknown'
-const getParticipantUM = (id: string) => project.value?.participants.find(p => p.id === id)?.um || 'Unknown'
+const getParticipantName = (id: string) => project.value?.participants.find(p => p.id === id)?.name || '未知'
+const getParticipantUM = (id: string) => project.value?.participants.find(p => p.id === id)?.um || '未知'
 
 const triggerConfetti = () => {
     const duration = 3000

@@ -32,7 +32,7 @@
               <div class="mb-4">
                 <h3 class="text-xl font-bold text-white mb-2">一键导入配置</h3>
                 <p class="text-slate-400 text-sm">
-                  请上传包含 <span class="text-blue-300 font-mono">人员名单</span> 和 <span class="text-purple-300 font-mono">奖品配置</span> Sheet的Excel文件
+                  请上传包含 <span class="text-blue-300 font-mono">人员名单</span> 和 <span class="text-purple-300 font-mono">奖项配置</span> 表格的 Excel 文件
                 </p>
               </div>
               
@@ -54,7 +54,7 @@
                 <div class="flex items-center gap-4">
                   <!-- Preview -->
                   <div class="w-14 h-14 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0 border border-slate-600 relative group">
-                    <img v-if="prize.image" :src="prize.image" alt="" class="w-full h-full object-cover" />
+                    <img v-if="prize.image" :src="prize.image" alt="奖品图片" class="w-full h-full object-cover" />
                     <div v-else class="w-full h-full flex items-center justify-center text-slate-600">
                       <ImageIcon class="w-6 h-6" />
                     </div>
@@ -134,13 +134,13 @@ const handleImageChange = (prize: Prize, e: Event) => {
   const file = target.files?.[0]
   if (file) {
     const reader = new FileReader()
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       if (event.target?.result) {
-        // Since we are now server-based, we'd ideally upload this to the server
-        // For simplicity, we'll assume the prize image logic is handled or to be implemented
-        // In this migration, we'll skip the actual server upload for now or just mock it
-        console.log("Image updated locally (base64):", event.target.result)
-        // onUpdatePrize({ ...prize, image: event.target.result as string });
+        try {
+          await projectStore.updatePrizeImage(props.projectId, prize.id, event.target.result as string)
+        } catch (err) {
+          alert("图片更新失败")
+        }
       }
     }
     reader.readAsDataURL(file)

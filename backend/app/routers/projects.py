@@ -88,3 +88,33 @@ def record_draw(project_id: str, draw_data: List[schemas.WinnerBase], db: Sessio
         db.add(winner)
     db.commit()
     return {"message": "Results recorded"}
+
+@router.patch("/{project_id}/prizes/{prize_id}", response_model=schemas.Prize)
+def update_prize_image(
+    project_id: str,
+    prize_id: str,
+    image_data: schemas.PrizeImageUpdate,
+    db: Session = Depends(get_db)
+):
+    prize = db.query(models.Prize).filter(
+        models.Prize.id == prize_id,
+        models.Prize.project_id == project_id
+    ).first()
+    
+    if not prize:
+        raise HTTPException(status_code=404, detail="Prize not found")
+    
+    prize.image = image_data.image
+    db.commit()
+    db.refresh(prize)
+    return prize
+
+@router.delete("/{project_id}/winners")
+def reset_winners(project_id: str, db: Session = Depends(get_db)):
+    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    db.query(models.Winner).filter(models.Winner.project_id == project_id).delete()
+    db.commit()
+    return {"message": "Winners reset successfully"}
