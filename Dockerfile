@@ -1,25 +1,32 @@
-# 阶段一：构建环境
-FROM node:22-alpine AS build
-
-WORKDIR /app
-
-# 安装依赖
-COPY package*.json ./
+# Use multi-stage build for frontend
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
 RUN npm install
-
-# 复制源代码并构建
-COPY . .
+COPY frontend/ ./
 RUN npm run build
 
-# 阶段二：生产环境
-FROM nginx:stable-alpine
+# Use Python image for backend and serving
+FROM python:3.11-slim
+WORKDIR /app
 
-# 复制自定义 Nginx 配置
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# 从构建阶段复制静态文件到 Nginx 目录
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy backend
+COPY backend/requirements.txt ./backend/
+RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
-EXPOSE 80
+COPY backend/ ./backend/
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy frontend static files to a location FastAPI can serve (or use Nginx)
+# For this implementation, we'll serve them via FastAPI or keep them for Nginx
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Expose port
+EXPOSE 8000
+
+# Command to run the application
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

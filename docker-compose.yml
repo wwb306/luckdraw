@@ -1,9 +1,12 @@
 services:
-  luckydraw-pro:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/backend/data
+    environment:
+      - DATABASE_URL=sqlite:///./backend/data/luckydraw.db
     restart: always
-    container_name: luckydraw-pro
