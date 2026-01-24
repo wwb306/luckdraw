@@ -54,16 +54,17 @@ WORKDIR /app
 COPY backend/ ./backend/
 
 # Copy frontend build artifacts from Stage 1
-# FastAPI main.py expects frontend/dist relative to the working directory (which is /app)
+WORKDIR /app
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Create data directory for SQLite
-RUN mkdir -p /app/backend/data
+# Create data directory and ensure permissions
+# Although we run as root, creating the directory explicitly helps
+# if the volume mount doesn't exist yet or has restricted permissions.
+RUN mkdir -p /app/backend/data && chmod 777 /app/backend/data
 
-# Expose port (Unified to 8000 to match development expectations and internal proxy)
+# Expose port
 EXPOSE 8000
 
 # Run the application
-# We run from /app so that relative path ./frontend/dist in main.py works
-# We set PYTHONPATH to /app/backend so that app.main is found
+# We run from /app so that relative path in main.py works
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

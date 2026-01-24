@@ -8,5 +8,5 @@ services:
     volumes:
       - ./backend/data:/app/backend/data
     environment:
-      - DATABASE_URL=sqlite:///./backend/data/luckydraw.db
+      - DATABASE_URL=sqlite:////app/backend/data/luckydraw.db
     restart: always
