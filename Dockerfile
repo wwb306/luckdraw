@@ -1,25 +1,70 @@
-# 阶段一：构建环境
-FROM node:22-alpine AS build
+# ==========================================
+# Stage 1: Build Frontend
+# ==========================================
+FROM node:20-alpine AS frontend-builder
+
+WORKDIR /app/frontend
+
+# Copy dependency files first for better caching
+COPY frontend/package*.json ./
+RUN npm install
+
+# Copy source and build
+COPY frontend/ ./
+RUN npm run build
+
+# ==========================================
+# Stage 2: Final Image
+# ==========================================
+FROM python:3.11-slim
+
+LABEL maintainer="Lucky Draw Pro"
 
 WORKDIR /app
 
-# 安装依赖
-COPY package*.json ./
-RUN npm install
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_VERSION=2.0.0 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    PYTHONPATH=/app/backend
 
-# 复制源代码并构建
-COPY . .
-RUN npm run build
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gcc \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# 阶段二：生产环境
-FROM nginx:stable-alpine
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# 复制自定义 Nginx 配置
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy backend dependency files
+COPY backend/pyproject.toml backend/poetry.lock* ./backend/
 
-# 从构建阶段复制静态文件到 Nginx 目录
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install backend dependencies
+WORKDIR /app/backend
+RUN poetry install --only main --no-root
 
-EXPOSE 80
+# Copy backend source code
+WORKDIR /app
+COPY backend/ ./backend/
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy frontend build artifacts from Stage 1
+WORKDIR /app
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Create data directory and ensure permissions
+# Although we run as root, creating the directory explicitly helps
+# if the volume mount doesn't exist yet or has restricted permissions.
+RUN mkdir -p /app/backend/data && chmod 777 /app/backend/data
+
+# Expose port
+EXPOSE 8000
+
+# Run the application
+# We run from /app so that relative path in main.py works
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

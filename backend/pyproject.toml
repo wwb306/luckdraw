@@ -1,0 +1,25 @@
+[project]
+name = "luckydraw-backend"
+version = "0.1.0"
+description = "Backend for Luckydraw Pro"
+authors = [
+    {name = "Your Name", email = "you@example.com"}
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic>=2.0.0",
+    "python-multipart>=0.0.9",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "python-slugify>=8.0.0",
+]
+requires-python = ">=3.10"
+
+[tool.poetry]
+packages = [{include = "app"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
