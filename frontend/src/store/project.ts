@@ -73,6 +73,31 @@ export const useProjectStore = defineStore('project', {
       } catch (err: any) {
         this.error = err.message
       }
+    },
+    async updatePrizeImage(projectId: string, prizeId: string, image: string) {
+      try {
+        await axios.patch(`/api/projects/${projectId}/prizes/${prizeId}`, { image })
+        if (this.currentProject) {
+          const prize = this.currentProject.prizes.find(p => p.id === prizeId)
+          if (prize) {
+            prize.image = image
+          }
+        }
+      } catch (err: any) {
+        this.error = err.message
+        throw err
+      }
+    },
+    async resetProjectWinners(projectId: string) {
+      try {
+        await axios.delete(`/api/projects/${projectId}/winners`)
+        if (this.currentProject) {
+          this.currentProject.winners = []
+        }
+      } catch (err: any) {
+        this.error = err.message
+        throw err
+      }
     }
   }
 })

@@ -30,6 +30,9 @@ class Prize(PrizeBase):
     project_id: str
     model_config = ConfigDict(from_attributes=True)
 
+class PrizeImageUpdate(BaseModel):
+    image: str # Base64 string
+
 class WinnerBase(BaseModel):
     prize_id: str
     participant_id: str

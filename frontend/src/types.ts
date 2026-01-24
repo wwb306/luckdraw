@@ -24,6 +24,15 @@ export interface Winner {
   won_at: string;
 }
 
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: any;
+  route: string;
+  tags: string[];
+}
+
 export interface Project {
   id: string;
   name: string;

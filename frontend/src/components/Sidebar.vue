@@ -35,7 +35,7 @@
               
               <!-- Image Container - Fixed Height Forced -->
               <div class="relative w-full h-[340px] bg-slate-900 rounded-2xl overflow-hidden border-4 border-slate-700 shadow-2xl mb-8 group shrink-0 text-white">
-                  <img v-if="currentPrize.image" :src="currentPrize.image" alt="prize" class="w-full h-full object-contain bg-slate-900" />
+                  <img v-if="currentPrize.image" :src="currentPrize.image" alt="奖品图片" class="w-full h-full object-contain bg-slate-900" />
                   <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
                       <Gift class="w-32 h-32 text-slate-700 drop-shadow-lg" />
                   </div>
